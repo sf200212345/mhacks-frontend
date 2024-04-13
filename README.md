@@ -14,10 +14,6 @@ Replicate the development environment using `npm install` on a cli.
 
 -   See more here: https://stackoverflow.com/questions/8367031/how-do-i-install-package-json-dependencies-in-the-current-directory-using-npm
 
-Since we are using Expo, I believe you also need to run the following to ensure the right library is installed:
-
-`npx expo install react-native-screens react-native-safe-area-context`
-
 We're using Expo to handle distribution, you can develop with Expo by using `npx expo start --tunnel` and use the Expo Go app on your phone to scan the QR code that opens
 
 -   Your phone must be on the same network that your computer is on
@@ -34,7 +30,9 @@ Finally, make sure you use VS Code and download the Prettier extension to get th
 
 ## File Overview
 
-The main files we will be working with is anything inside of src.
+The main files we will be working with is anything inside of app. To create a new route (page with url like http://prefix/[new page name]), either create a new .js file named the url suffix you want, or create a folder named the url suffix you want with an index.js file.
+
+Put static assets in the assets folder.
 
 ### Don't change the following (for now):
 
