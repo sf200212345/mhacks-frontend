@@ -21,7 +21,7 @@ export default function CompareProductsPage() {
         { key: 'Battery', value: 52 },
         { key: 'Portrait', value: 39 },
       ],
-      image: require('../../assets/Image-1.png'), // Replace with your local image
+      image: require('../../assets/Image-1.png'), 
     },
     {
       name: 'Sony - a7 III Mirrorless w/ 28-70mm Lens',
@@ -35,7 +35,7 @@ export default function CompareProductsPage() {
         { key: 'Battery', value: 52 },
         { key: 'Light & small', value: 32 },
       ],
-      image: require('../../assets/Image.png'), // Replace with your local image
+      image: require('../../assets/Image.png'),
     },
   ];
 

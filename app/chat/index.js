@@ -66,7 +66,7 @@ export default function ChatPage() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#4B0082', // Substitute for your gradient background
+    backgroundColor: '#4B0082',
   },
   flex: {
     flex: 1,
@@ -75,7 +75,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     padding: 10,
-    backgroundColor: '#5D3FD3', // Substitute for your gradient header
+    backgroundColor: '#5D3FD3',
   },
   backButton: {
     fontSize: 20,

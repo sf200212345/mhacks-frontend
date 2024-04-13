@@ -8,7 +8,7 @@ const ComparisonPage = () => {
   const products = [
     {
       name: 'Sony - a7',
-      imageUri: require('../../assets/Image.png'), // Replace with actual image path
+      imageUri: require('../../assets/Image.png'),
       matchPercentage: '94%',
       weight: '240g',
       batteryLife: '3.5h',
@@ -16,7 +16,7 @@ const ComparisonPage = () => {
     },
     {
       name: 'Nikon - Zfc',
-      imageUri: require('../../assets/Image-1.png'), // Replace with actual image path
+      imageUri: require('../../assets/Image-1.png'),
       matchPercentage: '100%',
       weight: '150g',
       batteryLife: '4h',
@@ -24,7 +24,7 @@ const ComparisonPage = () => {
     },
     {
       name: 'Canon - EOS RP',
-      imageUri: require('../../assets/Image-2.png'), // Replace with actual image path
+      imageUri: require('../../assets/Image-2.png'),
       matchPercentage: '52%',
       weight: '360g',
       batteryLife: '2h',
@@ -80,9 +80,7 @@ const ComparisonPage = () => {
         </View>
 
         {/* Bottom Navigation Bar */}
-        <View style={styles.bottomNavigation}>
-          {/* Navigation icons */}
-        </View>
+
       </ScrollView>
     </SafeAreaView>
   );
@@ -120,7 +118,7 @@ const styles = StyleSheet.create({
     width: 150,
     margin: 10,
     backgroundColor: '#6A5ACD',
-    borderRadius: 8,
+    borderRadius: 10,
     padding: 8,
   },
   productImage: {
@@ -146,13 +144,15 @@ const styles = StyleSheet.create({
   },
   featuresContainer: {
     // styles for features container
+    borderRadius: 20,
   },
   featureRow: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'space-evenly',
     padding: 10,
     backgroundColor: '#6A5ACD',
     marginVertical: 5,
+    borderRadius: 10,
   },
   featureTitle: {
     fontSize: 16,
@@ -172,7 +172,7 @@ const styles = StyleSheet.create({
     padding: 10,
     backgroundColor: '#6A5ACD',
   },
-  // ... other styles ...
+
 });
 
 export default ComparisonPage;
