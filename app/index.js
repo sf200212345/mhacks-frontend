@@ -1,5 +1,5 @@
 import { Button, Text, View } from "react-native";
-import { Link } from "expo-router";
+import { Link, router } from "expo-router";
 import GlobalStyles from "./GlobalStyles";
 
 export default function AppPage() {
@@ -16,7 +16,7 @@ export default function AppPage() {
         <Link href="/compare-summary" asChild>
           <Button title="Go to the Compare Summary Page" />
         </Link>
-
+        <Button title="go to compare summary" onPress={() => router.navigate({pathname: "/compare-summary", params: {message_thread_id: 72}})} />
       </View>
     </View>
   );

@@ -1,10 +1,13 @@
-import { Link } from "expo-router";
+import { Link , useLocalSearchParams} from "expo-router";
 import React from 'react';
 import { SafeAreaView, ScrollView, View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
 const ComparisonPage = () => {
   const navigation = useNavigation();
+  const hi = useLocalSearchParams();
+  console.log(hi, "this is hi")
+
   const products = [
     {
       name: 'Sony - a7',

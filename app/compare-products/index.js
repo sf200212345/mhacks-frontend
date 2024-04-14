@@ -1,5 +1,5 @@
-import { Link } from "expo-router";
-import React from 'react';
+import { Link, useLocalSearchParams } from "expo-router";
+import React, { useState } from 'react';
 import { StyleSheet, View, Text, Image, TouchableOpacity, ScrollView, Dimensions } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
@@ -8,36 +8,66 @@ const { width } = Dimensions.get('window');
 export default function CompareProductsPage() {
   // Placeholder for product data
   const navigation = useNavigation();
-  const products = [
-    {
-      name: 'Nikon - Zfc Mirrorless',
-      matchPercentage: '95%',
-      description: 'An old-school-look camera but has the latest technology for taking high-quality pictures and videos...',
-      attributes: [
-        { key: 'Appearance', value: 100 },
-        { key: 'Low light condition', value: 97 },
-        { key: 'Light & small', value: 67 },
-        { key: 'Travel', value: 65 },
-        { key: 'Battery', value: 52 },
-        { key: 'Portrait', value: 39 },
-      ],
-      image: require('../../assets/Image-1.png'), 
-    },
-    {
-      name: 'Sony - a7 III Mirrorless w/ 28-70mm Lens',
-      matchPercentage: '92%',
-      description: 'Equipped with a flip out vlogger screen, this DX-format 4K UHD compact camera delivers big image quality for photos and videos.',
-      attributes: [
-        { key: 'Travel', value: 100 },
-        { key: 'Portrait', value: 98 },
-        { key: 'Low light condition', value: 94 },
-        { key: 'Appearance', value: 78 },
-        { key: 'Battery', value: 52 },
-        { key: 'Light & small', value: 32 },
-      ],
-      image: require('../../assets/Image.png'),
-    },
-  ];
+  const {message_thread_id} = useLocalSearchParams();
+  const [products, setProducts] = useState([]);
+  // const products = [
+  //   {
+  //     name: 'Nikon - Zfc Mirrorless',
+  //     matchPercentage: '95%',
+  //     description: 'An old-school-look camera but has the latest technology for taking high-quality pictures and videos...',
+  //     attributes: [
+  //       { key: 'Appearance', value: 100 },
+  //       { key: 'Low light condition', value: 97 },
+  //       { key: 'Light & small', value: 67 },
+  //       { key: 'Travel', value: 65 },
+  //       { key: 'Battery', value: 52 },
+  //       { key: 'Portrait', value: 39 },
+  //     ],
+  //     image: require('../../assets/Image-1.png'), 
+  //   },
+  //   {
+  //     name: 'Sony - a7 III Mirrorless w/ 28-70mm Lens',
+  //     matchPercentage: '92%',
+  //     description: 'Equipped with a flip out vlogger screen, this DX-format 4K UHD compact camera delivers big image quality for photos and videos.',
+  //     attributes: [
+  //       { key: 'Travel', value: 100 },
+  //       { key: 'Portrait', value: 98 },
+  //       { key: 'Low light condition', value: 94 },
+  //       { key: 'Appearance', value: 78 },
+  //       { key: 'Battery', value: 52 },
+  //       { key: 'Light & small', value: 32 },
+  //     ],
+  //     image: require('../../assets/Image.png'),
+  //   },
+  // ];
+
+  const getProducts = async () => {
+    try {
+      const send_body = {
+        message_thread_id: message_thread_id
+      }
+      // Replace 'your-backend-endpoint' with the URL of your backend
+      const response = await fetch('http://3.139.234.137/get-compare-list/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(send_body),
+      });
+
+      const data = await response.json();
+      setProducts(data.products)
+    } catch (error) {
+      console.error(error);
+      // You might want to display some error message to the user
+    } finally {
+      setIsLoading(false); // Reset loading state
+    }
+  };
+  if (products.length == 0) {
+    getProducts();
+  }
+
 
   return (
     <View style={styles.container}>
@@ -62,22 +92,16 @@ export default function CompareProductsPage() {
       >
         {products.map((product, index) => (
           <View key={index} style={[styles.productSwipeablePage, { width: width }]}>
-            {/* Product Image and Match Percentage */}
-            <View style={styles.productContainer}>
-              <Image source={product.image} style={styles.productImage} />
-              <Text style={styles.matchPercentage}>{product.matchPercentage} Match</Text>
-            </View>
             {/* Product Details */}
             <View style={styles.productDetails}>
               <Text style={styles.productTitle}>{product.name}</Text>
-              <Text style={styles.productDescription}>{product.description}</Text>
             </View>
             {/* Attributes List */}
             <View style={styles.attributesList}>
               {product.attributes.map(attr => (
-                <View key={attr.key} style={styles.attribute}>
-                  <Text style={styles.attributeText}>{attr.key}</Text>
-                  <Text style={styles.attributeValue}>{attr.value}%</Text>
+                <View key={attr.name} style={styles.attribute}>
+                  <Text style={styles.attributeText}>{attr.attributeName}</Text>
+                  <Text style={styles.attributeValue}>{attr.attributeRating}%</Text>
                 </View>
               ))}
             </View>

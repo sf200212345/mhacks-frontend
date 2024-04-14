@@ -1,4 +1,4 @@
-import { Link } from "expo-router";
+import { Link, router } from "expo-router";
 import React, { useState } from 'react';
 import {
   StyleSheet,
@@ -23,21 +23,79 @@ export default function ChatPage() {
   let [fontsLoaded] = useFonts({
     Montserrat_400Regular,
   });
+  const [isLoading, setIsLoading] = useState(false);
+  const [message_thread_id, setMessageThreadId] = useState(null)
+  const [product_factor_id, setProductFactorId] = useState(null)
+
 
   if (!fontsLoaded) {
     return <AppLoading />;
   }
 
-  const sendMessage = () => {
+  const sendMessage = async () => {
     if (inputText.trim()) {
-      setMessages([...messages, { text: inputText, sent: true }]);
+      const messageToSend = {
+        message_thread_id: message_thread_id,
+        user_id: 1,
+        user_message: inputText,
+        product_factor_id: product_factor_id,
+      };
+  
+      // Add the message to the local state to update the UI
+      setMessages([...messages, { text: inputText, sent: true }, {text: "Generating...", sent: false }]);
       setInputText('');
+      setIsLoading(true); // Set loading state
+  
+      try {
+        // Replace 'your-backend-endpoint' with the URL of your backend
+        const response = await fetch('http://3.139.234.137/process-user-message/', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(messageToSend),
+        });
+  
+        const data = await response.json();
+  
+        // Check for the different types of responses and handle them accordingly
+        if (data.move_to_compare) {
+          console.log("here")
+          setTimeout(() => {
+            router.navigate({
+              pathname: "/compare-products",
+              params: {message_thread_id: data.message_thread_id}
+            });
+          }, 2000);
+          // Handle the case where the backend asks to move to compare (e.g., navigate to a different screen)
+          
+        } else {
+          // Otherwise, assume it's a regular message and add it to the messages state
+          console.log(data.message)
+          setMessageThreadId(data.message_thread_id)
+          setProductFactorId(data.product_factor_id)
+          setMessages(currentMessages => [...currentMessages, {
+            text: data.message,
+            sent: false,
+            message_thread_id: data.message_thread_id,
+            product_factor_id: data.product_factor_id,
+            possible_values: data.possible_values
+          }]);
+        }
+      } catch (error) {
+        console.error(error);
+        // You might want to display some error message to the user
+      } finally {
+        setIsLoading(false); // Reset loading state
+      }
     }
   };
+  
+
 
   return (
     <SafeAreaView style={styles.container}>
-      <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={styles.flex}>
+      <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={styles.flex} keyboardVerticalOffset={50}>
         {/* Header */}
         <View style={styles.header}>
           <TouchableOpacity onPress={() => navigation.goBack()}>
@@ -53,11 +111,28 @@ export default function ChatPage() {
         
         {/* Messages */}
         <ScrollView style={styles.messagesContainer}>
-          {messages.map((message, index) => (
-            <View key={index} style={[styles.messageBubble, message.sent ? styles.sentBubble : styles.receivedBubble]}>
+          {messages.map((message, index) => {
+            console.log(message)
+            if (message.sent) {
+              return (
+                <View key={index} style={[styles.messageBubble, styles.sentBubble]}>
+                <Text style={styles.messageText}>{message.text}</Text>
+              </View>
+              )
+            }
+            else {
+              return (
+              <View key={index} style={[styles.messageBubble, styles.receivedBubble]}>
               <Text style={styles.messageText}>{message.text}</Text>
-            </View>
-          ))}
+              {
+                message.possible_values && (
+                  <Text style={styles.messageText}>{message.possible_values.join(', ')}</Text>
+                )
+              }
+            </View>)
+            }
+          }
+          )}
         </ScrollView>
         
         {/* Input Area */}
