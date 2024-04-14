@@ -10,13 +10,23 @@ import {
   SafeAreaView,
   KeyboardAvoidingView,
   Platform,
+  Image,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { useFonts, Montserrat_400Regular } from '@expo-google-fonts/montserrat';
+import AppLoading from 'expo-app-loading';
 
 export default function ChatPage() {
   const navigation = useNavigation();
   const [messages, setMessages] = useState([]);
   const [inputText, setInputText] = useState('');
+  let [fontsLoaded] = useFonts({
+    Montserrat_400Regular,
+  });
+
+  if (!fontsLoaded) {
+    return <AppLoading />;
+  }
 
   const sendMessage = () => {
     if (inputText.trim()) {
@@ -33,7 +43,12 @@ export default function ChatPage() {
           <TouchableOpacity onPress={() => navigation.goBack()}>
             <Text style={styles.backButton}>←</Text>
           </TouchableOpacity>
-          <Text style={styles.headerTitle}>Chat with Brio</Text>
+          <View style={styles.headerTitleContainer}>
+            <Text style={{ fontFamily: 'Montserrat_400Regular', fontSize: 18, color: 'white'}}>Chat with Brio</Text>
+          </View>
+          <TouchableOpacity onPress={() => {/* handle cart action */}} style={styles.headerButton}>
+            <Image source={require("../../assets/cart.png")} style={styles.headerIcon} />
+          </TouchableOpacity>
         </View>
         
         {/* Messages */}
@@ -47,6 +62,9 @@ export default function ChatPage() {
         
         {/* Input Area */}
         <View style={styles.inputContainer}>
+        <TouchableOpacity onPress={() => {/* handle "+" action */}} style={styles.plusButton}>
+          <Text style={styles.plusButtonText}><Image source={require("../../assets/plus.png")} style={styles.headerIcon} /></Text>
+        </TouchableOpacity>
           <TextInput
             style={styles.input}
             value={inputText}
@@ -55,7 +73,7 @@ export default function ChatPage() {
             placeholderTextColor="#AAA" // Placeholder text color
           />
           <TouchableOpacity style={styles.sendButton} onPress={sendMessage}>
-            <Text style={styles.sendButtonText}>→</Text>
+            <Text style={styles.sendButtonText}><Image source={require("../../assets/send.png")}/></Text>
           </TouchableOpacity>
         </View>
       </KeyboardAvoidingView>
@@ -86,6 +104,11 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: '#FFFFFF',
   },
+  headerTitleContainer: {
+    flex: 1,
+    justifyContent: 'center', // Ensures the title is centered vertically
+    alignItems: 'center',  // Ensures the title is centered horizontally
+  },
   messagesContainer: {
     flex: 1,
   },
@@ -97,7 +120,7 @@ const styles = StyleSheet.create({
     maxWidth: '80%',
   },
   sentBubble: {
-    backgroundColor: '#7B68EE',
+    backgroundColor: '#6979F8',
     alignSelf: 'flex-end',
   },
   receivedBubble: {
@@ -120,6 +143,14 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     marginRight: 10,
     fontSize: 16,
+    fontFamily: 'Montserrat_400Regular',
+  },
+  plusButton: {
+    // Styles for the "+" button
+    backgroundColor: '#6A5ACD', // Example background color, adjust as necessary
+    borderRadius: 20,
+    padding: 10,
+    marginRight: 10, // Add some margin to the right of the "+" button
   },
   sendButton: {
     alignItems: 'center',
